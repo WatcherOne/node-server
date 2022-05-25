@@ -1,0 +1,24 @@
+{
+  "name": "node_server",
+  "version": "1.0.0",
+  "description": "a server for node",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WatcherOne/node_server.git"
+  },
+  "keywords": [
+    "node",
+    "server"
+  ],
+  "author": "watcher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WatcherOne/node_server/issues"
+  },
+  "homepage": "https://github.com/WatcherOne/node_server#readme"
+}
