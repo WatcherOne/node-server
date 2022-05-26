@@ -11,6 +11,7 @@
 // 再处理并结束请求，并带上错误处理
 // 由于是由next级联的, 故一定由next, 否则后面的中间件不会执行的！！！
 const Koa = require('koa')
+const fs = require('fs')
 const compose = require('koa-compose')       // 组合中间件, 由koa内置自带
 // bodyParser 中间件不支持 form-data 数据
 const bodyParser = require('koa-bodyparser') // 用于解析 body 请求的数据
@@ -31,11 +32,29 @@ app.use(async (ctx, next) => {
     await next()
 })
 
+app.use(async (ctx, next) => {
+    const url = ctx.request.url
+    if (url.startsWith('/api/')) {
+        await next()
+    } else {
+        if (url.includes('.css')) {
+            ctx.type = 'css'
+            const result = fs.readFileSync(`koaServer${url}`, 'utf-8')
+            ctx.response.body = result
+        } else {
+            ctx.type = 'html'
+            const html = fs.readFileSync(`koaServer${url}.html`, 'utf-8')
+            ctx.body = html
+        }
+    }
+})
+
 app.use(router.routes())  // 调用 router.routes() 来组装匹配好的路由, 返回一个合并好的中间件
 app.use(router.allowedMethods()) // 调用 router.allowedMethods() 获得一个中间件, 当发送了不符合的请求时, 会返回405 或 501
 
 // 当以上路由未匹配到时, 进入该中间件
 app.use(async (ctx, next) => {
+    console.log('未匹配到路由')
     const response = new ResponseObj(null)
     response.setStatus(404)
     response.setMsg('无效请求')
