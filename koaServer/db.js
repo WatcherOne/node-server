@@ -1,5 +1,5 @@
 const mysql = require('mysql') // 由第三方提供, 需要单独下载
-const ResponseObj = require('./responseObj')
+const AjaxResult = require('./models/ajaxResult')
 
 const mysqlConfig = {
     host: 'localhost',
@@ -25,7 +25,7 @@ exports.query = function (sql, params) {
             if (error) {
                 reject(error)
             } else {
-                resolve(new ResponseObj(results))
+                resolve(new AjaxResult(results))
             }
         })
     })

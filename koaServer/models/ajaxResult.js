@@ -2,7 +2,7 @@
  * 封装返回数据结构
  *********************************************************************************************/
 
-class ResponseObj {
+class AjaxResult {
     constructor (data) {
         this.status = 200
         this.data = data
@@ -22,4 +22,4 @@ class ResponseObj {
     }
 }
 
-module.exports = ResponseObj
+module.exports = AjaxResult

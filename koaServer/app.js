@@ -4,67 +4,40 @@
  * created: 2022-05-26
  * fn: 由koa框架 创建一个服务, 需要安装相关依赖, 依赖说明如下
  * koa 更简洁, 去掉了内置中间件, 去掉了路由功能, 由第三方形式提供
- *****************************************************************************/
-
-// koa 处理请求是先在启动服务前使用next将中间件级联起来，返回一个调用入口
-// 请求来时，会根据req/res创建context，然后根据入口调用所有中间件
-// 再处理并结束请求，并带上错误处理
-// 由于是由next级联的, 故一定由next, 否则后面的中间件不会执行的！！！
+ * ************************
+ * koa 处理请求是先在启动服务前使用next将中间件级联起来，返回一个调用入口
+ * 请求来时，会根据req/res创建context，然后根据入口调用所有中间件
+ * 再处理并结束请求，并带上错误处理
+ * 由于是由next级联的, 故一定由next, 否则后面的中间件不会执行的！！！
+ **************************
+*****************************************************************************/
 const Koa = require('koa')
-const fs = require('fs')
-const compose = require('koa-compose')       // 组合中间件, 由koa内置自带
-// bodyParser 中间件不支持 form-data 数据
-const bodyParser = require('koa-bodyparser') // 用于解析 body 请求的数据
-const koaBody = require('koa-body')
+const path = require('path')
+const koaStatic = require('koa-static')     // 提供静态资源, 减少一个一个路由的写
+const parameter = require('koa-parameter')  // 用于参数校验, 底层逻辑还是按照parameter来的
 
 const app = new Koa()
-const router = require('./router')
-const ResponseObj = require('./responseObj')
+const bodyParsing = require('./middleware/bodyParsing')
+const getResource = require('./middleware/getResource')
+const erroring = require('./middleware/error')
+const routing = require('./router')
 
-app.use(bodyParser())
-// 允许上传多个文件
-// app.use(koaBody({ multipart: true }))
-
-// 进入路由前的中间件
-app.use(async (ctx, next) => {
-    const { request } = ctx
-    console.log(`当前请求：${request.method} ${request.url}`)
-    await next()
-})
-
-app.use(async (ctx, next) => {
-    const url = ctx.request.url
-    if (url.startsWith('/api/')) {
-        await next()
-    } else {
-        if (url.includes('.css')) {
-            ctx.type = 'css'
-            const result = fs.readFileSync(`koaServer${url}`, 'utf-8')
-            ctx.response.body = result
-        } else {
-            ctx.type = 'html'
-            const html = fs.readFileSync(`koaServer${url}.html`, 'utf-8')
-            ctx.body = html
-        }
-    }
-})
-
-app.use(router.routes())  // 调用 router.routes() 来组装匹配好的路由, 返回一个合并好的中间件
-app.use(router.allowedMethods()) // 调用 router.allowedMethods() 获得一个中间件, 当发送了不符合的请求时, 会返回405 或 501
-
-// 当以上路由未匹配到时, 进入该中间件
-app.use(async (ctx, next) => {
-    console.log('未匹配到路由')
-    const response = new ResponseObj(null)
-    response.setStatus(404)
-    response.setMsg('无效请求')
-    ctx.response.body = response
-    await next()
-})
-
-app.on('error', err => {
-    console.log(`server error: ${err}`)
-})
+/*********************************************************************************************
+ *  处理静态资源
+ *  - 引用静态资源的地方无需写 static 路径
+ *  - 直接 '/' 或 省略 开头
+ *********************************************************************************************/
+app.use(koaStatic(path.join(__dirname, 'src/static')))
+/*****  使用body解析的中间件 ******************************************************************/
+bodyParsing(app)
+/*****  使用参数校验的中间件 ******************************************************************/
+app.use(parameter(app))
+/*****  区分路由类型 *************************************************************************/
+app.use(getResource)
+/*****  使用路由处理的中间件 ******************************************************************/
+routing(app)
+/*****  错误情况处理 *************************************************************************/
+erroring(app)
 
 const params = process.argv.slice(2)
 const port = params[0] || 3001
