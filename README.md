@@ -22,3 +22,6 @@ Inbound: Handshake in progress
 
 4. controller
  - 控制器, 处理业务逻辑与发送http相应
+
+5. models
+ - 实体类数据结构
