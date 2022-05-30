@@ -22,6 +22,8 @@ const getResource = require('./middleware/getResource')
 const erroring = require('./middleware/error')
 const routing = require('./router')
 
+// 在node环境下, 每个模块开始就存在：exports、require、module、__filename、__dirname
+console.log(__filename, __dirname)
 /*********************************************************************************************
  *  处理静态资源
  *  - 引用静态资源的地方无需写 static 路径
