@@ -1,27 +1,21 @@
-# node_server
-a server of node
+## The Server Of Node
+***
+> Server Node
 
-# node - ssh2 连接远程服务
-Custom crypto binding available
-Client: Trying mate-vbox on port 22 ...
-Local ident: 'SSH-2.0-ssh2js1.2.0'
-Socket connected
-Remote ident: 'SSH-2.0-OpenSSH_8.4p1 Ubuntu-5ubuntu1'
-Outbound: Sending KEXINIT
-Inbound: Handshake in progress
+- 用 Node 搭建的纯净前端服务器Demo
+- <i class="icon-share"></i> npm run serve:node
 
-### koa-server
+> Server Koa
 
-1. 用户认证与授权方式：JWT 和 session方式; 后者为常见方式
+- 用 Koa 搭建的具有整套流程的前端服务器Demo
+- <i class="icon-share"></i> npm run serve:koa
 
-2. middleware
- - 中间件, 做一些特殊的逻辑处理
-
-3. router
- - 定义api类的接口路由
-
-4. controller
- - 控制器, 处理业务逻辑与发送http相应
-
-5. models
- - 实体类数据结构
+| 相关依赖 | 依赖说明  |
+| ------- | :-------: |
+| body-parser |  用于解析 post 请求的 body 数据   |
+| koa-body |  同上, 只是针对koa的封装, 且不支持 form-data 数据格式  |
+| koa-bodyparser | 针对楼上的中间件的优化方案, 支持上传文件  |
+| koa-router | 对路由 (请求地址) 处理做的封装, 最终返回的是中间件 |
+| koa-static | 处理静态资源, 减少一个一个路由的判断 |
+| koa-parameter | 参数校验, 验证请求传递参数是否正确, 使用：ctx.verifyParams() |
+| mysql | 用于连接 mysql 数据库的插件 |

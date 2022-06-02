@@ -13,8 +13,8 @@
 *****************************************************************************/
 const Koa = require('koa')
 const path = require('path')
-const koaStatic = require('koa-static')     // 提供静态资源, 减少一个一个路由的写
-const parameter = require('koa-parameter')  // 用于参数校验, 底层逻辑还是按照parameter来的
+const koaStatic = require('koa-static')
+const parameter = require('koa-parameter')
 
 const app = new Koa()
 const bodyParsing = require('./middleware/bodyParsing')
@@ -22,6 +22,7 @@ const getResource = require('./middleware/getResource')
 const erroring = require('./middleware/error')
 const routing = require('./router')
 
+// globel.port = 3000 全局配置
 // 在node环境下, 每个模块开始就存在：exports、require、module、__filename、__dirname
 console.log(__filename, __dirname)
 /*********************************************************************************************
@@ -29,7 +30,7 @@ console.log(__filename, __dirname)
  *  - 引用静态资源的地方无需写 static 路径
  *  - 直接 '/' 或 省略 开头
  *********************************************************************************************/
-app.use(koaStatic(path.join(__dirname, 'src/static')))
+app.use(koaStatic(path.join(__dirname, 'public/static')))
 /*****  使用body解析的中间件 ******************************************************************/
 bodyParsing(app)
 /*****  使用参数校验的中间件 ******************************************************************/

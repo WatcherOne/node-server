@@ -1,12 +1,11 @@
 {
   "name": "node_server",
   "version": "1.0.0",
-  "description": "a server for node",
+  "description": "the server for node",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:node": "node nodeServer/app.js",
-    "start:koa": "node koaServer/app.js"
+    "serve:node": "node nodeServer/app.js",
+    "serve:koa": "node koaServer/app.js"
   },
   "repository": {
     "type": "git",
@@ -14,6 +13,7 @@
   },
   "keywords": [
     "node",
+    "koa",
     "server"
   ],
   "author": "watcher",

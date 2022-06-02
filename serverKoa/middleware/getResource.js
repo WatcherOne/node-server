@@ -17,7 +17,7 @@ const getResource = async (ctx, next) => {
         // 处理非 /api 类型的请求时, "都" 返回html文档（因为url实际的地址由前端路由控制，这是单页面应用的处理方式）
         // 而 css、img、js 等都通过 koaStatic 中间件来处理了
         ctx.type = 'html'
-        const html = fs.readFileSync(`koaServer/src/index.html`, 'utf-8')
+        const html = fs.readFileSync(`koaServer/public/index.html`, 'utf-8')
         // const html = fs.readFileSync(`koaServer/example/index.html`, 'utf-8')
         ctx.body = html
     }
